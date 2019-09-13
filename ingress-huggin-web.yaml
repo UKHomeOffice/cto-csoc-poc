@@ -1,0 +1,26 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: huggin-web
+  labels:
+    stable.k8s.psg.io/kcm.class: "default"
+  annotations:
+    kubernetes.io/ingress.class: "nginx-external"
+    ingress.kubernetes.io/secure-backends: "false"
+    ingress.kubernetes.io/backend-protocol: "HTTP"
+    ingress.kubernetes.io/force-ssl-redirect: "true"
+    kubernetes.io/tls-acme: "true"
+    stable.k8s.psg.io/kcm.provider: http
+
+  rules:
+    - host: huggin.dev.csoc-notprod.homeoffice.gov.uk
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: yeti-web
+              servicePort: http
+  tls:
+    - hosts:
+        - huggin.dev.csoc-notprod.homeoffice.gov.uk
+      secretName: huggin-le-tls
