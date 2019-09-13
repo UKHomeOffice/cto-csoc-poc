@@ -62,3 +62,4 @@ Tools included
 - [x] ingress
   - [x] yeti-web
   - [x] huggin-web
+- [ ] add whitelist to ingress
