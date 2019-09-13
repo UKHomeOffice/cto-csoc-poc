@@ -1,0 +1,44 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: huggin-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: huggin-web
+  template:
+    metadata:
+      labels:
+        name: huggin-web
+    spec:
+      containers:
+        # @TODO: add sidecar for tls
+        - image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/cto/csoc-poc:huginn-single-process
+          name: huggin-web
+          ports:
+            - name: http
+              containerPort: 3000
+          envFrom:
+            - secretRef:
+                name: huggin
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 120
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+      restartPolicy: Always
+      # volumes:
+      #   - name: grafana-data
+      #     persistentVolumeClaim:
+      #       claimName: grafana-data
+      #   - name: aws-creds
+      #     secret:
+      #       secretName: grafana
+      #       items:
+      #         - key: awscreds
+      #           path: credentials

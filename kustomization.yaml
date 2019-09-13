@@ -1,0 +1,37 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - deployment-huggin-postgres.yaml
+  - deployment-huggin-web.yaml
+  - deployment-huggin-worker.yaml
+  - hpa-huggin-web.yaml
+  - hpa-huggin-worker.yaml
+  - ingress-huggin-web.yaml
+  - pvc-huggin-postgres.yaml
+  - service-huggin-postgres.yaml
+  - service-huggin-web.yaml
+
+  - deployment-yeti-analytics.yaml
+  - deployment-yeti-beat.yaml
+  - deployment-yeti-exports.yaml
+  - deployment-yeti-feeds.yaml
+  - deployment-yeti-mongo.yaml
+  - deployment-yeti-oneshot.yaml
+  - deployment-yeti-redis.yaml
+  - deployment-yeti-uwsgi-http.yaml
+  - deployment-yeti-uwsgi.yaml
+  - deployment-yeti-web.yaml
+  - ingress-yeti-web.yaml
+  - service-yeti-mongo.yaml
+  - service-yeti-redis.yaml
+  - service-yeti-web.yaml
+
+secretGenerator:
+  - name: huggin
+    env: huggin-secrets.env
+
+configMapGenerator:
+  - name: yeti-conf
+    files:
+      - yeti.conf

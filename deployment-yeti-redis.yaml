@@ -1,0 +1,56 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: yeti-redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: yeti-redis
+  template:
+    metadata:
+      labels:
+        name: yeti-redis
+    spec:
+      # securityContext:
+      #   fsGroup: 1000
+      #   runAsGroup: 1000
+      #   runAsUser: 1000
+      containers:
+        - image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/cto/csoc-poc:redis
+          name: yeti-redis
+          # securityContext:
+          #   fsGroup: 1000
+          #   runAsNonRoot: true
+          #   runAsUser: 1000
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+            requests:
+              cpu: 500m
+              memory: 256Mi
+          ports:
+            - name: redis
+              containerPort: 6379
+          # readinessProbe:
+          #   exec:
+          #     command:
+          #       - sh
+          #       - -c
+          #       - /health/ping_readiness_local.sh 10
+          # livenessProbe:
+          #   exec:
+          #     command:
+          #       - sh
+          #       - -c
+          #       - /health/ping_liveness_local.sh 10
+          # volumeMounts:
+          #   - name: yeti-redis
+          #     mountPath: /var/lib/redisql/data
+          #     readOnly: false
+      restartPolicy: Always
+      # volumes:
+      #   - name: yeti-redis
+      #     persistentVolumeClaim:
+      #       claimName: yeti-redis

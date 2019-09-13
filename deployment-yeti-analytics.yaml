@@ -1,0 +1,31 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: yeti-analytics
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: yeti-analytics
+  template:
+    metadata:
+      labels:
+        name: yeti-analytics
+    spec:
+      containers:
+        - image: 340268328991.dkr.ecr.eu-west-2.amazonaws.com/cto/csoc-poc:yeti
+          command:
+            - sh
+            - -c
+            - "/usr/local/bin/celery -A core.config.celeryctl.celery_app worker -Ofair --autoscale=10,2 --purge -Q analytics -n analytics"
+          name: yeti-web
+          volumeMounts:
+            - mountPath: /opt/yeti/yeti.conf
+              name: config
+              subPath: yeti.conf
+              readOnly: true
+      restartPolicy: Always
+      volumes:
+        - name: config
+          configMap:
+            name: yeti-conf
