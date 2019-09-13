@@ -9,6 +9,10 @@ Tools included
     - huggin web service
 
   - [yeti](https://github.com/yeti-platform/yeti)
+    - yeti web service
+    - mongo
+    - redis
+    - various yeti workers
 
 ## TODO:
 
