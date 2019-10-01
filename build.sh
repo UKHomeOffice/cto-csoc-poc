@@ -9,6 +9,7 @@ docker pull redis
 docker tag redis:latest 340268328991.dkr.ecr.eu-west-2.amazonaws.com/cto/csoc-poc:redis
 docker push 340268328991.dkr.ecr.eu-west-2.amazonaws.com/cto/csoc-poc:redis
 
+docker pull 340268328991.dkr.ecr.eu-west-2.amazonaws.com/cto/csoc-poc:yeti
 docker build -t 340268328991.dkr.ecr.eu-west-2.amazonaws.com/cto/csoc-poc:yeti -f extras/docker/Dockerfile https://github.com/yeti-platform/yeti.git
 docker push 340268328991.dkr.ecr.eu-west-2.amazonaws.com/cto/csoc-poc:yeti
 
