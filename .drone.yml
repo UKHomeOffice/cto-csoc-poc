@@ -1,0 +1,105 @@
+pipeline:
+  get_docker_login:
+    image: mesosphere/aws-cli
+    commands:
+      - aws ecr get-login --region eu-west-2 --no-include-email > ecr-login
+    secrets:
+      - aws_access_key_id
+      - aws_secret_access_key
+    when:
+      branch: master
+      event: push
+
+  do_docker_login:
+    image: docker
+    environment:
+      - DOCKER_HOST=tcp://172.17.0.1:2375
+      - DOCKER_CONFIG=/drone/src/github.com/UKHomeOffice/cto-csoc-poc/.docker
+    commands:
+      - $(cat ecr-login)
+    when:
+      branch: master
+      event: push
+
+  rebuild_and_republish_docker_images:
+    image: docker
+    environment:
+      - DOCKER_HOST=tcp://172.17.0.1:2375
+      - DOCKER_CONFIG=/drone/src/github.com/UKHomeOffice/cto-csoc-poc/.docker
+    commands:
+      - apk add --no-cache git
+      - ./build.sh
+    when:
+      branch: master
+      event: push
+
+  get_kubectl_kustomize:
+    image: busybox
+    commands:
+      - wget https://storage.googleapis.com/kubernetes-release/release/v1.16.0/bin/linux/amd64/kubectl
+      - wget https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv3.2.1/kustomize_kustomize.v3.2.1_linux_amd64
+      - chmod +x kustomize_* kubectl
+
+  create_dummy_secrets:
+    image: busybox
+    commands:
+      - touch huggin/huggin-secrets.env
+      - touch yeti/yeti-web/keycloak-secret.env
+      - touch huggin/keycloak-secret.env
+
+  create_secrets:
+    image: busybox
+    commands:
+      - echo $${HUGGIN_SECRETS_NOTPROD} | base64 -d > huggin/huggin-secrets.env
+      - echo $${YETI_KEYCLOAK_SECRET_NOTPROD} | base64 -d > yeti/yeti-web/keycloak-secret.env
+      - echo $${HUGGIN_KEYCLOAK_SECRET_NOTPROD} | base64 -d > huggin/keycloak-secret.env
+    secrets:
+      - huggin_keycloak_secret_notprod
+      - yeti_keycloak_secret_notprod
+      - huggin_secrets_notprod
+    when:
+      branch: master
+      event: push
+
+  create_kubernetes_config:
+    image: busybox
+    commands:
+      - ./kustomize* build . > compiled.yaml
+
+  configure_kubectl:
+    image: busybox
+    commands:
+      - ./.drone-configure-kubeconfig.sh
+      - ./kubectl config use-context notprod
+      - ./kubectl get pods
+    environment:
+      - KUBECONFIG=/drone/src/github.com/UKHomeOffice/cto-csoc-poc/kube.conf
+    secrets:
+      - kube_namespace
+      - kube_server
+      - kube_token
+      - kube_ca
+    when:
+      branch: master
+      event: push
+
+  apply_image_pull_secret:
+    image: busybox
+    environment:
+      - KUBECONFIG=/drone/src/github.com/UKHomeOffice/cto-csoc-poc/kube.conf
+    commands:
+      - ./kubectl delete secret regcred
+      - ./kubectl create secret generic regcred --from-file=.dockerconfigjson=.docker/config.json --type=kubernetes.io/dockerconfigjson
+    when:
+      branch: master
+      event: push
+
+  apply_kubernetes_config:
+    image: busybox
+    environment:
+      - KUBECONFIG=/drone/src/github.com/UKHomeOffice/cto-csoc-poc/kube.conf
+    commands:
+      - ./kubectl apply -f compiled.yaml
+    when:
+      branch: master
+      event: push
