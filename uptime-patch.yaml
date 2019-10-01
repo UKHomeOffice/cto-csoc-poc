@@ -1,0 +1,6 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: not-important
+  annotations:
+    downscaler/uptime: Mon-Fri 08:00-17:30 Europe/London

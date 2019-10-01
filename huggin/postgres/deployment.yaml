@@ -1,0 +1,58 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: huggin-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: huggin-postgres
+  template:
+    metadata:
+      labels:
+        name: huggin-postgres
+    spec:
+      containers:
+        - image: image_prefix:postgres
+          name: huggin-postgres
+          securityContext:
+            runAsNonRoot: true
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 500m
+              memory: 256Mi
+          ports:
+            - name: postgres
+              containerPort: 5432
+          env:
+            - name: PGDATA
+              value: /var/lib/postgresql/data/mydata
+          envFrom:
+            - secretRef:
+                name: huggin
+          readinessProbe:
+            exec:
+              command:
+                - pg_isready
+                - -d
+                - $POSTGRES_DB
+                - -h
+                - localhost
+                - -U
+                - $POSTGRES_USER
+          livenessProbe:
+            tcpSocket:
+              port: postgres
+            initialDelaySeconds: 60
+          volumeMounts:
+            - name: huggin-postgres
+              mountPath: /var/lib/postgresql/data
+              readOnly: false
+      restartPolicy: Always
+      volumes:
+        - name: huggin-postgres
+          persistentVolumeClaim:
+            claimName: huggin-postgres

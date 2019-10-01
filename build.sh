@@ -1,3 +1,7 @@
+docker pull quay.io/keycloak/keycloak-gatekeeper
+docker tag quay.io/keycloak/keycloak-gatekeeper 340268328991.dkr.ecr.eu-west-2.amazonaws.com/cto/csoc-poc:keycloak-gatekeeper
+docker push 340268328991.dkr.ecr.eu-west-2.amazonaws.com/cto/csoc-poc:keycloak-gatekeeper
+
 docker pull postgres
 docker tag postgres:latest 340268328991.dkr.ecr.eu-west-2.amazonaws.com/cto/csoc-poc:postgres
 docker push 340268328991.dkr.ecr.eu-west-2.amazonaws.com/cto/csoc-poc:postgres

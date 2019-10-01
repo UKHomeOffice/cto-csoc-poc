@@ -1,1 +1,4 @@
 huggin-secrets.env
+/secret-ecr.yaml
+/yeti/yeti-web/keycloak-secret.env
+/huggin/keycloak-secret.env

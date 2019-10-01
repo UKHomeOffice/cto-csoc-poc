@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ./yeti-analytics
+  - ./yeti-beat
+  - ./yeti-export
+  - ./yeti-feeds
+  - ./yeti-oneshot
+  - ./yeti-uwsgi
+  - ./yeti-uwsgi-http
+  - ./yeti-web
+  - ./mongo
+  - ./redis
+
+configMapGenerator:
+  - name: yeti-conf
+    files:
+      - yeti.conf

@@ -1,0 +1,62 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: yeti
+spec:
+  template:
+    metadata:
+      labels:
+        yeti: yeti-web
+    spec:
+      containers:
+        - name: yeti
+          command:
+            - ./yeti.py
+            - webserver
+          resources:
+            limits:
+              cpu: 1500m
+              memory: 512Mi
+            requests:
+              cpu: 1000m
+              memory: 256Mi
+          volumeMounts:
+            - mountPath: /var/log
+              name: logs
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 5000
+            initialDelaySeconds: 120
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 5000
+        - name: keycloak-gatekeeper
+          image: quay.io/keycloak/keycloak-gatekeeper
+          securityContext:
+            runAsUser: 1001
+          env:
+            - name: PROXY_CLIENT_ID
+              value: yeti
+            - name: PROXY_UPSTREAM_URL
+              value: http://localhost:5000
+          envFrom:
+            - secretRef:
+                name: yeti-keycloak
+            - configMapRef:
+                name: keycloak-conf
+          ports:
+            - name: http
+              containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /oauth/health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /oauth/health
+              port: http
+      volumes:
+        - name: logs
+          emptyDir: {}

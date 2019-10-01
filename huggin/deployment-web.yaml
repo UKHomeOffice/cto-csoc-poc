@@ -1,0 +1,56 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: huggin-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: huggin-web
+  template:
+    metadata:
+      labels:
+        name: huggin-web
+    spec:
+      containers:
+        - name: keycloak-gatekeeper
+          image: quay.io/keycloak/keycloak-gatekeeper
+          envFrom:
+            - secretRef:
+                name: huggin-keycloak
+            - configMapRef:
+                name: keycloak-conf
+          env:
+            - name: PROXY_CLIENT_ID
+              value: huggin
+            - name: PROXY_UPSTREAM_URL
+              value: http://localhost:3000
+          ports:
+            - name: http
+              containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /oauth/health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /oauth/health
+              port: http
+        - image: image_prefix:huginn-single-process
+          securityContext:
+            runAsUser: 1001
+            runAsGroup: 0
+          name: huggin-web
+          envFrom:
+            - secretRef:
+                name: huggin
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 120
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+      restartPolicy: Always

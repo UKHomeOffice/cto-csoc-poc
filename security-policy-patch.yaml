@@ -1,0 +1,11 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: not-important
+spec:
+  template:
+    spec:
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 1000
+        runAsNonRoot: true

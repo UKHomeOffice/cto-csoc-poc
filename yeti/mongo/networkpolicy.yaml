@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: yeti-mongo
+spec:
+  podSelector:
+    matchLabels:
+      name: yeti-mongo
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: yeti
+      ports:
+        - protocol: TCP
+          port: mongo
