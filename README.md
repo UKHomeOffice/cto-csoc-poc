@@ -4,10 +4,10 @@ Proof of concept delivered by Home Office CTO of a couple of tools used by the C
 
 Tools included
 
-- [huggin](https://github.com/huginn/huginn)
+- [huginn](https://github.com/huginn/huginn)
   - postgres
-  - huggin worker
-  - huggin web service
+  - huginn worker
+  - huginn web service
 
 - [yeti](https://github.com/yeti-platform/yeti)
   - yeti web service

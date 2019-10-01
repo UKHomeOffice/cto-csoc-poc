@@ -2,14 +2,14 @@ apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
   annotations:
-  name: huggin-web
+  name: huginn-web
 spec:
   maxReplicas: 6
   minReplicas: 1
   scaleTargetRef:
     apiVersion: extensions/v1beta1
     kind: Deployment
-    name: huggin-web
+    name: huginn-web
   metrics:
     - type: Resource
       resource:

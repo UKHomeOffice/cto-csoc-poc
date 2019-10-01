@@ -1,20 +1,20 @@
 kind: Deployment
 apiVersion: extensions/v1beta1
 metadata:
-  name: huggin-worker
+  name: huginn-worker
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: huggin-worker
+      name: huginn-worker
   template:
     metadata:
       labels:
-        name: huggin-worker
+        name: huginn-worker
     spec:
       containers:
         - image: image_prefix:huginn-single-process
-          name: huggin-worker
+          name: huginn-worker
           command:
             - /scripts/init
             - bin/threaded.rb
@@ -23,5 +23,5 @@ spec:
             runAsGroup: 0
           envFrom:
             - secretRef:
-                name: huggin
+                name: huginn
       restartPolicy: Always

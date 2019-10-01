@@ -1,28 +1,28 @@
 kind: Deployment
 apiVersion: extensions/v1beta1
 metadata:
-  name: huggin-web
+  name: huginn-web
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: huggin-web
+      name: huginn-web
   template:
     metadata:
       labels:
-        name: huggin-web
+        name: huginn-web
     spec:
       containers:
         - name: keycloak-gatekeeper
           image: quay.io/keycloak/keycloak-gatekeeper
           envFrom:
             - secretRef:
-                name: huggin-keycloak
+                name: huginn-keycloak
             - configMapRef:
                 name: keycloak-conf
           env:
             - name: PROXY_CLIENT_ID
-              value: huggin
+              value: huginn
             - name: PROXY_UPSTREAM_URL
               value: http://localhost:3000
           ports:
@@ -40,10 +40,10 @@ spec:
           securityContext:
             runAsUser: 1001
             runAsGroup: 0
-          name: huggin-web
+          name: huginn-web
           envFrom:
             - secretRef:
-                name: huggin
+                name: huginn
           livenessProbe:
             httpGet:
               path: /

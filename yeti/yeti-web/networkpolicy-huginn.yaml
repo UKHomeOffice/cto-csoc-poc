@@ -1,19 +1,19 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: huggin-postgres
+  name: yeti-huginn
 spec:
   podSelector:
     matchLabels:
-      name: huggin-postgres
+      yeti: yeti-web
   ingress:
     - from:
         - podSelector:
             matchLabels:
-              name: huggin-worker
+              name: huginn-worker
         - podSelector:
             matchLabels:
-              name: huggin-web
+              name: huginn-web
       ports:
         - protocol: TCP
-          port: 5432
+          port: noauth

@@ -1,19 +1,19 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: huggin-web
+  name: huginn-postgres
 spec:
   podSelector:
     matchLabels:
-      name: huggin-web
+      name: huginn-postgres
   ingress:
     - from:
-        - namespaceSelector:
-            matchLabels:
-              name: ingress-external
         - podSelector:
             matchLabels:
-              name: ingress
+              name: huginn-worker
+        - podSelector:
+            matchLabels:
+              name: huginn-web
       ports:
         - protocol: TCP
-          port: http
+          port: 5432

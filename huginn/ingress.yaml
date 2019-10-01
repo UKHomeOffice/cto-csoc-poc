@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: huggin-web
+  name: huginn-web
   labels:
     stable.k8s.psg.io/kcm.class: "default"
   annotations:
@@ -13,14 +13,14 @@ metadata:
     stable.k8s.psg.io/kcm.provider: http
 spec:
   rules:
-    - host: huggin.csoc.cto-notprod.homeoffice.gov.uk
+    - host: huginn.csoc.cto-notprod.homeoffice.gov.uk
       http:
         paths:
           - path: /
             backend:
-              serviceName: huggin-web
+              serviceName: huginn-web
               servicePort: http
   tls:
     - hosts:
-        - huggin.csoc.cto-notprod.homeoffice.gov.uk
-      secretName: huggin-le-tls
+        - huginn.csoc.cto-notprod.homeoffice.gov.uk
+      secretName: huginn-le-tls

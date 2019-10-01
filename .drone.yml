@@ -46,21 +46,21 @@ pipeline:
     group: phase1
     image: busybox
     commands:
-      - touch huggin/huggin-secrets.env
+      - touch huginn/huginn-secrets.env
       - touch yeti/yeti-web/keycloak-secret.env
-      - touch huggin/keycloak-secret.env
+      - touch huginn/keycloak-secret.env
 
   create_secrets:
     image: busybox
     group: phase2
     commands:
-      - echo $${HUGGIN_SECRETS_NOTPROD} | base64 -d > huggin/huggin-secrets.env
+      - echo $${huginn_SECRETS_NOTPROD} | base64 -d > huginn/huginn-secrets.env
       - echo $${YETI_KEYCLOAK_SECRET_NOTPROD} | base64 -d > yeti/yeti-web/keycloak-secret.env
-      - echo $${HUGGIN_KEYCLOAK_SECRET_NOTPROD} | base64 -d > huggin/keycloak-secret.env
+      - echo $${huginn_KEYCLOAK_SECRET_NOTPROD} | base64 -d > huginn/keycloak-secret.env
     secrets:
-      - huggin_keycloak_secret_notprod
+      - huginn_keycloak_secret_notprod
       - yeti_keycloak_secret_notprod
-      - huggin_secrets_notprod
+      - huginn_secrets_notprod
     when:
       branch: master
       event: push

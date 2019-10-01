@@ -1,20 +1,20 @@
 kind: Deployment
 apiVersion: extensions/v1beta1
 metadata:
-  name: huggin-postgres
+  name: huginn-postgres
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: huggin-postgres
+      name: huginn-postgres
   template:
     metadata:
       labels:
-        name: huggin-postgres
+        name: huginn-postgres
     spec:
       containers:
         - image: image_prefix:postgres
-          name: huggin-postgres
+          name: huginn-postgres
           securityContext:
             runAsNonRoot: true
           resources:
@@ -32,7 +32,7 @@ spec:
               value: /var/lib/postgresql/data/mydata
           envFrom:
             - secretRef:
-                name: huggin
+                name: huginn
           readinessProbe:
             exec:
               command:
@@ -48,11 +48,11 @@ spec:
               port: postgres
             initialDelaySeconds: 60
           volumeMounts:
-            - name: huggin-postgres
+            - name: huginn-postgres
               mountPath: /var/lib/postgresql/data
               readOnly: false
       restartPolicy: Always
       volumes:
-        - name: huggin-postgres
+        - name: huginn-postgres
           persistentVolumeClaim:
-            claimName: huggin-postgres
+            claimName: huginn-postgres

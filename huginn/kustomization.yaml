@@ -12,7 +12,7 @@ resources:
   - networkpolicy.yaml
 
 secretGenerator:
-  - name: huggin
-    env: huggin-secrets.env
-  - name: huggin-keycloak
+  - name: huginn
+    env: huginn-secrets.env
+  - name: huginn-keycloak
     env: keycloak-secret.env
