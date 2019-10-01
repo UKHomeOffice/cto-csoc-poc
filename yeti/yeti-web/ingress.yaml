@@ -11,8 +11,8 @@ metadata:
     ingress.kubernetes.io/force-ssl-redirect: "true"
     kubernetes.io/tls-acme: "true"
     stable.k8s.psg.io/kcm.provider: http
-    ingress.kubernetes.io/proxy-redirect-from: http://localhost:5000/observable/
-    ingress.kubernetes.io/proxy-redirect-to: /observable/
+    ingress.kubernetes.io/proxy-redirect-from: http://localhost:5000/
+    ingress.kubernetes.io/proxy-redirect-to: /
 spec:
   rules:
     - host: yeti.csoc.cto-notprod.homeoffice.gov.uk

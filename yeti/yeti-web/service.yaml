@@ -8,5 +8,9 @@ spec:
       port: 3000
       protocol: TCP
       targetPort: http
+    - name: noauth
+      port: 3001
+      protocol: TCP
+      targetPort: noauth
   selector:
     yeti: yeti-web

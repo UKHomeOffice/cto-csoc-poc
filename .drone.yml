@@ -23,6 +23,7 @@ pipeline:
 
   rebuild_and_republish_docker_images:
     image: docker
+    group: phase1
     environment:
       - DOCKER_HOST=tcp://172.17.0.1:2375
       - DOCKER_CONFIG=/drone/src/github.com/UKHomeOffice/cto-csoc-poc/.docker
@@ -35,12 +36,14 @@ pipeline:
 
   get_kubectl_kustomize:
     image: busybox
+    group: phase1
     commands:
       - wget https://storage.googleapis.com/kubernetes-release/release/v1.16.0/bin/linux/amd64/kubectl
       - wget https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv3.2.1/kustomize_kustomize.v3.2.1_linux_amd64
       - chmod +x kustomize_* kubectl
 
   create_dummy_secrets:
+    group: phase1
     image: busybox
     commands:
       - touch huggin/huggin-secrets.env
@@ -49,6 +52,7 @@ pipeline:
 
   create_secrets:
     image: busybox
+    group: phase2
     commands:
       - echo $${HUGGIN_SECRETS_NOTPROD} | base64 -d > huggin/huggin-secrets.env
       - echo $${YETI_KEYCLOAK_SECRET_NOTPROD} | base64 -d > yeti/yeti-web/keycloak-secret.env
@@ -68,6 +72,7 @@ pipeline:
 
   configure_kubectl:
     image: busybox
+    group: phase2
     commands:
       - ./.drone-configure-kubeconfig.sh
       - ./kubectl config use-context notprod

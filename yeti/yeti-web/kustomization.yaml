@@ -6,7 +6,8 @@ resources:
   - service.yaml
   - ingress.yaml
   - hpa.yaml
-  - networkpolicy.yaml
+  - networkpolicy-ingress.yaml
+  - networkpolicy-huggin.yaml
 
 patchesStrategicMerge:
   - deployment.yaml

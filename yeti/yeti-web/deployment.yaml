@@ -23,15 +23,18 @@ spec:
           volumeMounts:
             - mountPath: /var/log
               name: logs
+          ports:
+            - name: noauth
+              containerPort: 5000
           livenessProbe:
             httpGet:
-              path: /
-              port: 5000
+              path: /observable/
+              port: noauth
             initialDelaySeconds: 120
           readinessProbe:
             httpGet:
-              path: /
-              port: 5000
+              path: /observable/
+              port: noauth
         - name: keycloak-gatekeeper
           image: quay.io/keycloak/keycloak-gatekeeper
           securityContext:
