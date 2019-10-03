@@ -35,4 +35,12 @@ spec:
               command:
                 - redis-cli
                 - ping
+          volumeMounts:
+            - name: yeti-redis
+              mountPath: /data
+              readOnly: false
       restartPolicy: Always
+      volumes:
+        - name: yeti-redis
+          persistentVolumeClaim:
+            claimName: yeti-redis
