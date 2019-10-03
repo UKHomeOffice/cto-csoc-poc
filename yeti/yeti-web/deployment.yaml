@@ -11,8 +11,9 @@ spec:
       containers:
         - name: yeti
           command:
-            - ./yeti.py
-            - webserver
+            - bash
+            - -c
+            - "/usr/local/bin/uwsgi -b 32768 --http 0.0.0.0:8080 -w yeti --callable webapp --processes 4 --stats 0.0.0.0:9191 --stats-http --max-requests 100 --lazy-apps"
           resources:
             limits:
               cpu: 1500m
@@ -20,15 +21,15 @@ spec:
             requests:
               cpu: 1000m
               memory: 256Mi
+          securityContext:
+            runAsUser: 999
+            runAsGroup: 1000
           volumeMounts:
             - mountPath: /var/log
               name: logs
-            - name: yeti-storage
-              mountPath: /opt/yeti/storage
-              readOnly: false
           ports:
             - name: noauth
-              containerPort: 5000
+              containerPort: 8080
           livenessProbe:
             httpGet:
               path: /observable/
@@ -46,7 +47,7 @@ spec:
             - name: PROXY_CLIENT_ID
               value: yeti
             - name: PROXY_UPSTREAM_URL
-              value: http://localhost:5000
+              value: http://localhost:8080
           envFrom:
             - secretRef:
                 name: yeti-keycloak
@@ -54,7 +55,7 @@ spec:
                 name: keycloak-conf
           ports:
             - name: http
-              containerPort: 8080
+              containerPort: 8082
           livenessProbe:
             httpGet:
               path: /oauth/health
@@ -66,6 +67,3 @@ spec:
       volumes:
         - name: logs
           emptyDir: {}
-        - name: yeti-storage
-          persistentVolumeClaim:
-            claimName: yeti-storage
