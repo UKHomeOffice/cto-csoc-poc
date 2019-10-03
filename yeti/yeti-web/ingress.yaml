@@ -13,6 +13,9 @@ metadata:
     stable.k8s.psg.io/kcm.provider: http
     ingress.kubernetes.io/proxy-redirect-from: http://localhost:5000/
     ingress.kubernetes.io/proxy-redirect-to: /
+    ingress.kubernetes.io/proxy-connect-timeout: 360
+    ingress.kubernetes.io/proxy-send-timeout: 360
+    ingress.kubernetes.io/proxy-read-timeout: 360
 spec:
   rules:
     - host: yeti.csoc.cto-notprod.homeoffice.gov.uk
