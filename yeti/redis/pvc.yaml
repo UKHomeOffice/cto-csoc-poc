@@ -1,11 +1,11 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: yeti-storage
+  name: yeti-redis
 spec:
   storageClassName: gp2-encrypted
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 4Gi
+      storage: 1Gi
