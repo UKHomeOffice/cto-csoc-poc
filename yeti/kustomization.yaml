@@ -7,8 +7,6 @@ resources:
   - ./yeti-export
   - ./yeti-feeds
   - ./yeti-oneshot
-  # - ./yeti-uwsgi
-  # - ./yeti-uwsgi-http
   - ./yeti-web
   - ./mongo
   - ./redis
